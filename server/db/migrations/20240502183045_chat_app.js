@@ -2,16 +2,46 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = function(knex) {
+exports.up = function (knex) {
 
-    return knex.schema.createTable('chat_app', function (table) {
-        table.increments('id');
-        table.string('personName', 50).notNullable();
-        table.string('personNumber', 50).notNullable();
-        table.string('personEmail', 50).notNullable();
-        table.timestamps(true, true);
-    });
-  
+  // Conversation Users' Table
+
+  return knex.schema.createTable('users', function (table) {
+      table.increments('id');
+      table.string('username', 100);
+      table.string('user_number', 100);
+      table.timestamps(true, true);
+
+    })
+    //Conversation Configuration Table
+
+    .createTable('convo_participants', function (table) {
+      table.increments('id');
+      table.string('convo_code', 100);
+      table.string('message_sender', 255);
+      table.string('message_recipient', 255);
+      table.timestamps(true, true);
+    })
+
+    //Conversation Box Table
+
+    .createTable('convo_box', function (table) {
+      table.increments('id');
+      table.string('convo_code', 100);
+      table.timestamps(true, true);
+    })
+
+    // Conversation Messages' Table
+
+    .createTable('convo_messages', function (table) {
+      table.increments('id');
+      table.string('convo_code', 100);
+      table.string('user_id', 100);
+      table.string('message', 255);
+      table.timestamps(true, true);
+      table.timestamp('time').notNullable().defaultTo(knex.raw('CURRENT_TIMESTAMP'));
+
+    })
 };
 
 /**
@@ -19,6 +49,11 @@ exports.up = function(knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-    // Drop the chat_app table if it exists
-    return knex.schema.dropTableIfExists('chat_app');
+
+  // Drop tables if they exist
+
+  return knex.schema.dropTableIfExists('users')
+    .dropTableIfExists('convo_participants')
+    .dropTableIfExists('convo_box')
+    .dropTableIfExists('convo_messages');
 };

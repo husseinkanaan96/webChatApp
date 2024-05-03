@@ -11,25 +11,26 @@ import axios, { AxiosResponse } from 'axios';
 })
 export class ChatsComponentComponent implements OnInit {
 
-  chats: any;
-  private baseUrl = 'http://localhost:3000';
+  arrayOfUsers: any;
+  private baseUrl = 'http://localhost:3000/api';
 
   constructor(
     private chatAppServicesService: ChatAppServicesService,
     private router: Router) { }
 
-  chatList() {
-    this.router.navigate(['/chatList']);
-  }
+  // chatList() {
+  //   this.router.navigate(['/chatList']);
+  // }
 
   async ngOnInit(): Promise<void> {
-    await this.getChats();
-    console.log("chats >>>>>> ", this.chats);
+    await this.getUsers();
+    console.log("chats >>>>>> ", this.arrayOfUsers);
   }
 
-  async getChats(): Promise<any> {
-    const response: AxiosResponse = await axios.get(`${this.baseUrl}/api/chats`);
-    this.chats = JSON.parse(response.data);
+  async getUsers(): Promise<any> {
+    const response: AxiosResponse = await axios.get(`${this.baseUrl}/users`);
+    this.arrayOfUsers = JSON.parse(response.data);
+    
   }
 
   // addChat(name: string): void {
